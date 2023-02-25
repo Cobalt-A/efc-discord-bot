@@ -3,6 +3,7 @@ module.exports = (guild = {id: "!", name: "!"}) => {
         id: guild.id,
         name: guild.name,
         members: {}, //Удалять запрещаю!
-        prefix: "g/" //Префикс по умолчанию. 
+        prefix: "g/", //Префикс по умолчанию.
+        wars: []
     };
 };

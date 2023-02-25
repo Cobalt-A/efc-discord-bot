@@ -5,12 +5,29 @@
 			"id": "899200433552252989",
 			"name": "Strelok.js Verification And Testing Server",
 			"prefix": "g/",
+			"wars": [],
 			"members": {}
 		},
 		"348375127148331008": {
 			"id": "348375127148331008",
 			"name": "Confederation of Freedom",
 			"prefix": "g/",
+			"wars": [
+				{
+					"groups": [
+						"1",
+						"2"
+					],
+					"war": true
+				},
+				{
+					"groups": [
+						"360422370386640896",
+						"406757016594546699"
+					],
+					"war": true
+				}
+			],
 			"members": {
 				"308310534988627968": {
 					"id": "308310534988627968",
