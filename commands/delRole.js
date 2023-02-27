@@ -5,21 +5,30 @@ module.exports = async (bot,message,args,argsF) => {
     const member = message.guild.members.cache.get(args.name);
     const rolesId = message.member._roles
 
-    for (const idRole of rolesId) {
-        const userRole = message.guild.roles.cache.find(role => role.id === idRole);
-        const arrayRoleNames = userRole.name.split(' ')
-        
-        if (arrayRoleNames[0] == 'Глава') {
-            if (arrayRoleNames[1][0] == role.name[0]) {
-                return message.reply({content: `<@${args.name}> теперь не <@&${args.id}>`}).then(() => {member.roles.remove(role)})
-            }
-        }
+    const roles = rolesId.map((el) => {
+        const result = message.guild.roles.cache.find(role => role.id === el)
+        return result.name
+    })
+
+    const isComander = roles.find((el) => !el.indexOf('Глава') ? 1 : 0 );
+    const inGroup = roles.find((el) => !el.indexOf(role.name) ? 1 : 0 );
+    const isOwnerMessage = member.user == message.user
+
+    if (!isComander || !inGroup) {
+        return message.reply({
+            content: `Вы не являетесь главой группировки <@&${args.id}>`,
+            ephemeral: true
+        })
     }
 
-    return message.reply({
-        content: `Вы не являетесь главой группировки <@&${args.id}>`,
-        ephemeral: true
-    })
+    if (isOwnerMessage) {
+        return message.reply({
+            content: `Вы не можете удалить из группировки <@&${args.id}> самого себя`,
+            ephemeral: true
+        })
+    }
+
+    return message.reply({content: `<@${args.name}> теперь не <@&${args.id}>`}).then(() => {member.roles.remove(role)})
     
 };
 module.exports.names = ["delrole"]; //У неё есть название

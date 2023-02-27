@@ -1,7 +1,7 @@
 module.exports = async (bot,message,args,argsF) => {
     //args - это массив аргументов. Например g/ping 0 1 2 tEsT | args[0]="0", args[1]="1", args[2]="2", args[3]="test" . А так-же argsF[3]=="tEsT"
 
-    if (message.member.permissions.has("MANAGE_MESSAGES")) {
+    if (!message.member.permissions.has("MANAGE_MESSAGES")) {
         return message.reply({
             content: 'У вас не достаточно прав для использования этой команды',
             ephemeral: true
