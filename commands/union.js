@@ -14,7 +14,7 @@ module.exports = async (bot,message,args,argsF) => {
     })
 
     // является ли пользователь главой этой группировки
-    if (!commanderRole || groupRole !== args.id) {
+    if (!commanderRole || groupRole !== args.invater) {
         return message.reply({
             content: `Вы не являетесь главой группировки <@&${args.invater}>, или такой группировки не существует`,
             ephemeral: true

@@ -44,8 +44,8 @@
 					"defensive": "507505587387629583",
 					"invater": "360422370386640896",
 					"accepter": "507505587387629583",
-					"status": "war",
-					"pieceInvate": "inProgress",
+					"status": null,
+					"pieceInvate": null,
 					"unionInvate": null
 				},
 				{
