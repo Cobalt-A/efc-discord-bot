@@ -4,25 +4,27 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
-    const agressorRole = message.guild.roles.cache.find(role => role.id === args.agressor);
     const userRolesId = message.member._roles
-    const userRoles = userRolesId.map((el) => {
-        const result = message.guild.roles.cache.find(role => role.id === el)
-        return result.name
-    })
-
-    const isComander = userRoles.find((el) => !el.indexOf('Глава') ? 1 : 0 );
-    const inGroup = userRoles.find((el) => !el.indexOf(agressorRole.name) ? 1 : 0 );
+    const commanderRole = memGuild.commanderRole.find((el) => userRolesId.find((element) => element == el ))
+    const groupRole = memGuild.groupings.find((el) => userRolesId.find((element) => element == el ))
 
     // если есть обьект с этими ролями записать его
-    const object = memGuild.wars.filter((obj) => {
+    const object = memGuild.wars.find((obj) => {
         return obj.groups.find((el) => el == args.agressor) && obj.groups.find((el) => el == args.defensive)
-    })[0]
+    })
 
     // является ли пользователь главой этой группировки
-    if (!isComander || !inGroup) {
+    if (!commanderRole || groupRole !== args.id) {
         return message.reply({
-            content: `Вы не являетесь главой группировки <@&${args.agressor}>`,
+            content: `Вы не являетесь главой группировки <@&${args.agressor}>, или такой группировки не существует`,
+            ephemeral: true
+        })
+    }
+
+    // является ли эта роль, ролью группировки
+    if (!memGuild.groupings.find((el) => el == args.defensive)) {
+        return message.reply({
+            content: `Роль <@&${args.defensive}> не является ролью группировки`,
             ephemeral: true
         })
     }
@@ -63,8 +65,8 @@ module.exports = async (bot,message,args,argsF) => {
 
     // если в бд группы из этих 2-х ролей есть, поменять статус на войну
     object.status = 'war'
-    object.invater = args.agressor
-    object.accepter = args.defensive
+    object.agressor = args.agressor
+    object.defensive = args.defensive
     Memory.save()
     return message.reply({
         content: `Группировка <@&${args.agressor}> теперь в войне с группировкой <@&${args.defensive}>`

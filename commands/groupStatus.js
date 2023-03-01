@@ -22,8 +22,7 @@ module.exports = async (bot,message,args,argsF) => {
 
     if (!groups.length) {
         return message.reply({
-            content: `Группировка <@&${args.group}> пока не имеет политических отношей с другими группировками`,
-            ephemeral: true
+            content: `Группировка <@&${args.group}> пока не имеет политических отношей с другими группировками`
         })
     }
 

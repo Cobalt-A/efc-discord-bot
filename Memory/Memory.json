@@ -6,12 +6,23 @@
 			"name": "Strelok.js Verification And Testing Server",
 			"prefix": "g/",
 			"wars": [],
+			"commanderRole": [],
+			"groupings": [],
 			"members": {}
 		},
 		"348375127148331008": {
 			"id": "348375127148331008",
 			"name": "Confederation of Freedom",
 			"prefix": "g/",
+			"commanderRole": [
+				"349600895719309312"
+			],
+			"groupings": [
+				"360422370386640896",
+				"406757016594546699",
+				"348386893718618115",
+				"507505587387629583"
+			],
 			"wars": [
 				{
 					"groups": [
@@ -34,7 +45,7 @@
 					"invater": "360422370386640896",
 					"accepter": "507505587387629583",
 					"status": "war",
-					"pieceInvate": null,
+					"pieceInvate": "inProgress",
 					"unionInvate": null
 				},
 				{
@@ -42,11 +53,11 @@
 						"360422370386640896",
 						"348386893718618115"
 					],
-					"agressor": null,
-					"defensive": null,
+					"agressor": "360422370386640896",
+					"defensive": "348386893718618115",
 					"invater": null,
 					"accepter": null,
-					"status": null,
+					"status": "war",
 					"pieceInvate": null,
 					"unionInvate": null
 				}
@@ -70,6 +81,11 @@
 				"159985870458322944": {
 					"id": "159985870458322944",
 					"name": "MEE6",
+					"guildId": "348375127148331008"
+				},
+				"184405311681986560": {
+					"id": "184405311681986560",
+					"name": "FredBoat♪♪",
 					"guildId": "348375127148331008"
 				}
 			}
@@ -95,6 +111,10 @@
 		"159985870458322944": {
 			"id": "159985870458322944",
 			"name": "MEE6"
+		},
+		"184405311681986560": {
+			"id": "184405311681986560",
+			"name": "FredBoat♪♪"
 		}
 	}
 }

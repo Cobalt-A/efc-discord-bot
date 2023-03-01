@@ -1,26 +1,35 @@
 module.exports = async (bot,message,args,argsF) => {
     //args - это массив аргументов. Например g/ping 0 1 2 tEsT | args[0]="0", args[1]="1", args[2]="2", args[3]="test" . А так-же argsF[3]=="tEsT"
 
-    const role = message.guild.roles.cache.find(role => role.id === args.id);
+    const {guild} = message
+    const {Memory} = bot
+    const memGuild = Memory.guilds.get(guild.id)
     const member = message.guild.members.cache.get(args.name);
-    const rolesId = message.member._roles
-
-    const roles = rolesId.map((el) => {
-        const result = message.guild.roles.cache.find(role => role.id === el)
-        return result.name
-    })
-
-    const isComander = roles.find((el) => !el.indexOf('Глава') ? 1 : 0 );
-    const inGroup = roles.find((el) => !el.indexOf(role.name) ? 1 : 0 );
+    const role = message.guild.roles.cache.find(role => role.id === args.id);
+    const userRolesId = message.member._roles
+    const memberRolesId = member._roles
+    const commanderRole = memGuild.commanderRole.find((el) => userRolesId.find((element) => element == el ))
+    const groupRole = memGuild.groupings.find((el) => userRolesId.find((element) => element == el ))
+    const isMemberInGroup = memberRolesId.find((el) => el == args.id)
     const isOwnerMessage = member.user == message.user
-
-    if (!isComander || !inGroup) {
+    
+    // является ли пользователь главой этой группировки
+    if (!commanderRole || groupRole !== args.id) {
         return message.reply({
-            content: `Вы не являетесь главой группировки <@&${args.id}>`,
+            content: `Вы не являетесь главой группировки <@&${args.id}>, или такой группировки не существует`,
             ephemeral: true
         })
     }
 
+    // если добовляемый уже с этой ролью
+    if (!isMemberInGroup) {
+        return message.reply({
+            content: `<@${args.name}> не находится в группировке <@&${args.id}>`,
+            ephemeral: true
+        })
+    }
+
+    // если добовляемый уже с этой ролью
     if (isOwnerMessage) {
         return message.reply({
             content: `Вы не можете удалить из группировки <@&${args.id}> самого себя`,
@@ -28,7 +37,8 @@ module.exports = async (bot,message,args,argsF) => {
         })
     }
 
-    return message.reply({content: `<@${args.name}> теперь не <@&${args.id}>`}).then(() => {member.roles.remove(role)})
+    member.roles.remove(role)
+    return message.reply({content: `<@${args.name}> теперь не <@&${args.id}>`})
     
 };
 module.exports.names = ["delrole"]; //У неё есть название
