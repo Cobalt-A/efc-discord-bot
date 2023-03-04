@@ -4,6 +4,8 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
+    const isGroupRole = memGuild.groupings.find((el) => el.id == args.grouprole )
+    const object = memGuild.commanderRoles.find((obj) => obj.id == args.role)
 
     if (!message.member.permissions.has("ADMIN")) {
         return message.reply({
@@ -12,18 +14,35 @@ module.exports = async (bot,message,args,argsF) => {
         })
     }
 
-    // если такая роль уже есть
-    if (memGuild.commanderRole.find((el) => el == args.role)) {
+    if (!isGroupRole) {
         return message.reply({
-            content: `Роль <@&${args.role}> уже является ролью для командающих`,
+            content: `Роль <@&${args.grouprole}> не является ролью группировки`,
             ephemeral: true
         })
     }
 
-    memGuild.commanderRole.push(args.role)
+    if (object && object.groups.find((el) => el == args.grouprole)) {
+        return message.reply({
+            content: `Роль <@&${args.role}> уже имеет возможность командования группировкой <@&${args.grouprole}>`,
+            ephemeral: true
+        })
+    }
+
+    if (object && isGroupRole) {
+        object.groups.push(isGroupRole.id)
+        Memory.save()
+        return message.reply({
+            content: `В роль <@&${args.role}> добавлено командование над группировкой <@&${args.grouprole}>`
+        })
+    }
+
+    memGuild.commanderRoles.push({
+        id: args.role,
+        groups: [args.grouprole]
+    })
     Memory.save()
     return message.reply({
-        content: `Теперь роль <@&${args.role}> является ролью для командающих группировками`
+        content: `Теперь роль <@&${args.role}> является ролью для командования группировкой <@&${args.grouprole}>`
     })
     
 };
@@ -36,6 +55,12 @@ module.exports.interaction = { //И слэш команда
         {
             name: 'role',
             description: 'your role group war',
+            type: 8,
+            required: true
+        },
+        {
+            name: 'grouprole',
+            description: 'role group war',
             type: 8,
             required: true
         }

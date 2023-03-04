@@ -5,61 +5,177 @@
 			"id": "899200433552252989",
 			"name": "Strelok.js Verification And Testing Server",
 			"prefix": "g/",
-			"wars": [],
-			"commanderRole": [],
 			"groupings": [],
+			"commanderRoles": [],
 			"members": {}
 		},
 		"348375127148331008": {
 			"id": "348375127148331008",
 			"name": "Confederation of Freedom",
 			"prefix": "g/",
-			"commanderRole": [
-				"349600895719309312"
-			],
-			"groupings": [
-				"360422370386640896",
-				"406757016594546699",
-				"348386893718618115",
-				"507505587387629583"
-			],
-			"wars": [
+			"commanderRoles": [
 				{
+					"id": "349600895719309312",
+					"groups": [
+						"360422370386640896"
+					]
+				},
+				{
+					"id": "365789397469364236",
 					"groups": [
 						"360422370386640896",
 						"406757016594546699"
-					],
-					"invater": "360422370386640896",
-					"accepter": "406757016594546699",
-					"status": "union",
-					"pieceInvate": null,
-					"unionInvate": null
+					]
+				}
+			],
+			"groupings": [
+				{
+					"id": "406757016594546699",
+					"groups": [
+						{
+							"id": "406757016594546699",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "360422370386640896",
+							"status": null,
+							"agressor": "360422370386640896",
+							"invater": "360422370386640896",
+							"accepter": "406757016594546699",
+							"invate": null
+						},
+						{
+							"id": "348386893718618115",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "507505587387629583",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						}
+					]
 				},
 				{
+					"id": "360422370386640896",
 					"groups": [
-						"360422370386640896",
-						"507505587387629583"
-					],
-					"agressor": "360422370386640896",
-					"defensive": "507505587387629583",
-					"invater": "360422370386640896",
-					"accepter": "507505587387629583",
-					"status": null,
-					"pieceInvate": null,
-					"unionInvate": null
+						{
+							"id": "406757016594546699",
+							"status": null,
+							"agressor": "360422370386640896",
+							"invater": "360422370386640896",
+							"accepter": "406757016594546699",
+							"invate": null
+						},
+						{
+							"id": "360422370386640896",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "348386893718618115",
+							"status": null,
+							"agressor": null,
+							"invater": "360422370386640896",
+							"accepter": "348386893718618115",
+							"invate": null
+						},
+						{
+							"id": "507505587387629583",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						}
+					]
 				},
 				{
+					"id": "348386893718618115",
 					"groups": [
-						"360422370386640896",
-						"348386893718618115"
-					],
-					"agressor": "360422370386640896",
-					"defensive": "348386893718618115",
-					"invater": null,
-					"accepter": null,
-					"status": "war",
-					"pieceInvate": null,
-					"unionInvate": null
+						{
+							"id": "406757016594546699",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "360422370386640896",
+							"status": null,
+							"agressor": null,
+							"invater": "360422370386640896",
+							"accepter": "348386893718618115",
+							"invate": null
+						},
+						{
+							"id": "348386893718618115",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "507505587387629583",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						}
+					]
+				},
+				{
+					"id": "507505587387629583",
+					"groups": [
+						{
+							"id": "406757016594546699",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "360422370386640896",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "348386893718618115",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						},
+						{
+							"id": "507505587387629583",
+							"status": null,
+							"agressor": null,
+							"invater": null,
+							"accepter": null,
+							"invate": null
+						}
+					]
 				}
 			],
 			"members": {

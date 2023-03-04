@@ -5,16 +5,14 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
-    const member = message.guild.members.cache.get(args.name);
     const role = message.guild.roles.cache.find(role => role.id === args.id);
+    const member = message.guild.members.cache.get(args.name);
+    const isMemberInGroup = member._roles.find((el) => el == args.id)
     const userRolesId = message.member._roles
-    const memberRolesId = member._roles
-    const commanderRole = memGuild.commanderRole.find((el) => userRolesId.find((element) => element == el ))
-    const groupRole = memGuild.groupings.find((el) => userRolesId.find((element) => element == el ))
-    const isMemberInGroup = memberRolesId.find((el) => el == args.id)
-    
+    const userCommanderRole = memGuild.commanderRoles.find((commanderRole) => userRolesId.find((userRole) => commanderRole.groups.find((group) => userRole == commanderRole.id && group == args.id)))
+
     // является ли пользователь главой этой группировки
-    if (!commanderRole || groupRole !== args.id) {
+    if (!userCommanderRole) {
         return message.reply({
             content: `Вы не являетесь главой группировки <@&${args.id}>, или такой группировки не существует`,
             ephemeral: true

@@ -4,6 +4,10 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
+    const isGroupRole = memGuild.groupings.find((el) => el == args.grouprole )
+    const object = memGuild.commanderRoles.find((obj) => {
+        return obj.id == args.role
+    })
 
     if (!message.member.permissions.has("ADMIN")) {
         return message.reply({
@@ -12,18 +16,41 @@ module.exports = async (bot,message,args,argsF) => {
         })
     }
 
-    // если такой роли нет
-    if (!memGuild.commanderRole.find((el) => el == args.role)) {
+    if (!isGroupRole && args.grouprole) {
         return message.reply({
-            content: `Роль <@&${args.role}> не является ролью для командающих`,
+            content: `Роль <@&${args.grouprole}> не является ролью группировки`,
             ephemeral: true
         })
     }
 
-    memGuild.commanderRole = memGuild.commanderRole.filter((el) => el !== args.role)
+    if (!object) {
+        return message.reply({
+            content: `Роль <@&${args.role}> не является ролью командующего`,
+            ephemeral: true
+        })
+    }
+
+    if (object && !object.groups.find((el) => el == args.grouprole)) {
+        return message.reply({
+            content: `Роль <@&${args.role}> не имеет командывания над группировкой <@&${args.grouprole}>`,
+            ephemeral: true
+        })
+    }
+
+    if (object && !args.grouprole) {
+        memGuild.commanderRoles = memGuild.commanderRoles.filter((el) =>  el.id !== args.role)
+        Memory.save()
+        return message.reply({
+            content: `Роль <@&${args.role}> не имеет командывания над группировкой <@&${args.grouprole}>`,
+            ephemeral: true
+        })
+    }
+
+    
+    object.groups = object.groups.filter((el) => el !== args.grouprole);
     Memory.save()
     return message.reply({
-        content: `Теперь роль <@&${args.role}> не является ролью командающих`
+        content: `Теперь роль <@&${args.role}> не является ролью для командования группировкой <@&${args.grouprole}>`
     })
     
 };
@@ -38,6 +65,12 @@ module.exports.interaction = { //И слэш команда
             description: 'your role group war',
             type: 8,
             required: true
+        },
+        {
+            name: 'grouprole',
+            description: 'role group war',
+            type: 8,
+            required: false
         }
     ],
     defaultPermission: true //Про слэш команды можно узнать из документации

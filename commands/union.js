@@ -5,50 +5,41 @@ module.exports = async (bot,message,args,argsF) => {
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
     const userRolesId = message.member._roles
-    const commanderRole = memGuild.commanderRole.find((el) => userRolesId.find((element) => element == el ))
-    const groupRole = memGuild.groupings.find((el) => userRolesId.find((element) => element == el ))
+    const userCommanderRole = memGuild.commanderRoles.find((commanderRole) => userRolesId.find((userRole) => commanderRole.groups.find((group) => userRole == commanderRole.id && group == args.invater)))
+    const userCommandGroup = userCommanderRole ? userCommanderRole.groups.find((el) => el == args.invater) : undefined
 
     // если есть обьект с этими ролями записать его
-    const object = memGuild.wars.find((obj) => {
-        return obj.groups.find((el) => el == args.invater) && obj.groups.find((el) => el == args.accepter)
-    })
+    const userObject = memGuild.groupings.find((el) => el.id == args.invater)
+    const userObjectGroup = userObject ? userObject.groups.find((el) => el.id == args.accepter) : undefined
+
+    const object = memGuild.groupings.find((el) => el.id == args.accepter)
+    const objectGroup = object ? object.groups.find((el) => el.id == args.invater) : undefined
 
     // является ли пользователь главой этой группировки
-    if (!commanderRole || groupRole !== args.invater) {
+    if (!userCommandGroup || !userObject) {
         return message.reply({
             content: `Вы не являетесь главой группировки <@&${args.invater}>, или такой группировки не существует`,
             ephemeral: true
         })
     }
 
+    if (args.invater == args.accepter) {
+        return message.reply({
+            content: `Нельзя предложить союз своей группировке`,
+            ephemeral: true
+        })
+    }
+
     // является ли эта роль, ролью группировки
-    if (!memGuild.groupings.find((el) => el == args.accepter)) {
+    if (!object) {
         return message.reply({
             content: `Роль <@&${args.accepter}> не является ролью группировки`,
             ephemeral: true
         })
     }
 
-    // если в бд обьекта с этими 2-я ролями нет, они запишутся в бд
-    if (!object) {
-        memGuild.wars.push({
-            groups: [args.invater, args.accepter],
-            agressor: null,
-            defensive: null,
-            invater: null,
-            accepter: null,
-            status: null,
-            pieceInvate: null,
-            unionInvate: 'inProgress'
-        })
-        Memory.save()
-        return message.reply({
-            content: `Группировка <@&${args.invater}> предлогает союз группировке <@&${args.accepter}>`
-        })
-    }
-
     // если война
-    if (object.status == 'war') {
+    if (userObjectGroup.status == 'war' && objectGroup.status == 'war') {
         return message.reply({
             content: `Союз не возможен группировка <@&${args.invater}> находится в войне с <@&${args.accepter}>`,
             ephemeral: true
@@ -56,7 +47,7 @@ module.exports = async (bot,message,args,argsF) => {
     }
 
     // если уже есть союз
-    if (object.status == 'union') {
+    if (userObjectGroup.status == 'union' && objectGroup.status == 'union') {
         return message.reply({
             content: `Группировка <@&${args.invater}> уже находится в союзе <@&${args.accepter}>`,
             ephemeral: true
@@ -64,14 +55,19 @@ module.exports = async (bot,message,args,argsF) => {
     }
 
     // если уже есть запрос
-    if (object.unionInvate == 'inProgress') {
+    if (userObjectGroup.invate == 'union' && objectGroup.invate == 'union') {
         return message.reply({
-            content: `Группировка <@&${object.invater}> уже предложила союз группировке <@&${object.accepter}>`,
+            content: `Группировка <@&${userObjectGroup.invater}> уже предложила союз группировке <@&${userObjectGroup.accepter}>`,
             ephemeral: true
         })
     }
 
-    object.unionInvate = 'inProgress'
+    userObjectGroup.invate = 'union'
+    userObjectGroup.invater = args.invater
+    userObjectGroup.accepter = args.accepter
+    objectGroup.invate = 'union'
+    objectGroup.invater = args.invater
+    objectGroup.accepter = args.accepter
     Memory.save()
     return message.reply({
         content: `Группировка <@&${args.invater}> предлогает союз группировке <@&${args.accepter}>`

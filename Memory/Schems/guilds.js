@@ -4,8 +4,7 @@ module.exports = (guild = {id: "!", name: "!"}) => {
         name: guild.name,
         members: {}, //Удалять запрещаю!
         prefix: "g/", //Префикс по умолчанию.
-        commanderRole: [],
-        groupings: [],
-        wars: []
+        commanderRoles: [],
+        groupings: []
     };
 };

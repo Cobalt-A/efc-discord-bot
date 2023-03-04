@@ -4,39 +4,26 @@ module.exports = async (bot,message,args,argsF) => {
     const {author, guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
+    const userObject = memGuild.groupings.find((el) => el.id == args.group)
+    let contet = ''
 
-    const groups = memGuild.wars.map((el) => {
-        if (el.groups.find((el) => el == args.group)) {
-            const neiborGroup = el.groups.find((el) => el !== args.group)
-            return {
-                userGroup: args.group, 
-                neiborGroup: neiborGroup, 
-                accepter: el.accepter,
-                invater: el.invater,
-                status: el.status,
-                pieceInvate: el.pieceInvate,
-                unionInvate: el.unionInvate
-            }
-        }
-    }).filter((el) => el)
-
-    if (!groups.length) {
+    if (!userObject) {
         return message.reply({
-            content: `Группировка <@&${args.group}> пока не имеет политических отношей с другими группировками`
+            content: `Роль <@&${args.group}> не является ролью группировки`,
+            ephemeral: true
         })
     }
 
-    let contet = ''
-
-    for (const el of groups) {
-        const status =  el.status == null ? 'нейтралитете' :
-                        el.status == 'war' ? 'войне' :
-                        el.status == 'union' ? 'союзе' :
+    for (const group of userObject.groups) {
+        const status =  group.status == null ? 'нейтралитете' :
+                        group.status == 'war' ? 'войне' :
+                        group.status == 'union' ? 'союзе' :
                         'нейтралитете'
-        const pieceInvate = el.pieceInvate ? `, ожидается принятие мира группировкой <@&${el.accepter}>` : ''
-        const unionInvate = el.unionInvate ? `, ожидается принятие союза группировкой <@&${el.accepter}>` : ''
+        const invate =  group.invate == 'piece' ? `, ожидается принятие мира группировкой <@&${group.accepter}>` :
+                        group.invate == 'union' ? `, ожидается принятие союза группировкой <@&${group.accepter}>` :
+                        ''
 
-        const result = `Группировка <@&${el.userGroup}> в ${status} с группировкой <@&${el.neiborGroup}>` + pieceInvate + unionInvate + '\r\n'
+        const result = `Группировка <@&${args.group}> в ${status} с группировкой <@&${group.id}>` + invate + ';\r\n'
         contet = contet + result
     }
 

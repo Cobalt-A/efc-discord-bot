@@ -5,50 +5,42 @@ module.exports = async (bot,message,args,argsF) => {
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
     const userRolesId = message.member._roles
-    const commanderRole = memGuild.commanderRole.find((el) => userRolesId.find((element) => element == el ))
-    const groupRole = memGuild.groupings.find((el) => userRolesId.find((element) => element == el ))
+    const userCommanderRole = memGuild.commanderRoles.find((commanderRole) => userRolesId.find((userRole) => commanderRole.groups.find((group) => userRole == commanderRole.id && group == args.agressor)))
+    const userCommandGroup = userCommanderRole ? userCommanderRole.groups.find((el) => el == args.agressor) : undefined
 
     // если есть обьект с этими ролями записать его
-    const object = memGuild.wars.find((obj) => {
-        return obj.groups.find((el) => el == args.agressor) && obj.groups.find((el) => el == args.defensive)
-    })
+    const userObject = memGuild.groupings.find((el) => el.id == args.agressor)
+    const userObjectGroup = userObject ? userObject.groups.find((el) => el.id == args.defensive) : undefined
+
+    const object = memGuild.groupings.find((el) => el.id == args.defensive)
+    const objectGroup = object ? object.groups.find((el) => el.id == args.agressor) : undefined
 
     // является ли пользователь главой этой группировки
-    if (!commanderRole || groupRole !== args.agressor) {
+    if (!userCommandGroup || !userObject) {
         return message.reply({
             content: `Вы не являетесь главой группировки <@&${args.agressor}>, или такой группировки не существует`,
             ephemeral: true
         })
     }
 
+    // нет ли дубликата
+    if (args.agressor == args.defensive) {
+        return message.reply({
+            content: `Нельзя обьявить войну своей группировке`,
+            ephemeral: true
+        })
+    }
+
     // является ли эта роль, ролью группировки
-    if (!memGuild.groupings.find((el) => el == args.defensive)) {
+    if (!object) {
         return message.reply({
             content: `Роль <@&${args.defensive}> не является ролью группировки`,
             ephemeral: true
         })
     }
 
-    // если в бд группы из этих 2-х ролей нет, они запишутся в бд с статусом войны
-    if (!object) {
-        memGuild.wars.push({
-            groups: [args.agressor, args.defensive],
-            agressor: args.agressor,
-            defensive: args.defensive,
-            invater: null, 
-            accepter: null, 
-            status: 'war',
-            pieceInvate: null,
-            unionInvate: null
-        })
-        Memory.save()
-        return message.reply({
-            content: `Группировка <@&${args.agressor}> теперь в войне с группировкой <@&${args.defensive}>`
-        })
-    }
-
     // если есть союз
-    if (object.status == 'union') {
+    if (userObjectGroup.status == 'union' && objectGroup.status == 'union') {
         return message.reply({
             content: `Война не возможна, группировка <@&${args.agressor}> находится в союзе с группировкой <@&${args.defensive}>`,
             ephemeral: true
@@ -56,7 +48,7 @@ module.exports = async (bot,message,args,argsF) => {
     }
 
     // если в бд группы из этих 2-х ролей есть и статус уже равен войне, ничего не делать
-    if (object.status == 'war') {
+    if (userObjectGroup.status == 'war' && objectGroup.status == 'war') {
         return message.reply({
             content: `Группировка <@&${args.agressor}> уже находится в войне с <@&${args.defensive}>`,
             ephemeral: true
@@ -64,9 +56,10 @@ module.exports = async (bot,message,args,argsF) => {
     }
 
     // если в бд группы из этих 2-х ролей есть, поменять статус на войну
-    object.status = 'war'
-    object.agressor = args.agressor
-    object.defensive = args.defensive
+    userObjectGroup.status = 'war'
+    userObjectGroup.agressor = args.agressor
+    objectGroup.status = 'war'
+    objectGroup.agressor = args.agressor
     Memory.save()
     return message.reply({
         content: `Группировка <@&${args.agressor}> теперь в войне с группировкой <@&${args.defensive}>`

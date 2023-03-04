@@ -4,6 +4,8 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
+    let commanders = 'Роли командующих: \n'
+    let groupings = 'Роли группировок: \n'
 
     if (!message.member.permissions.has("ADMIN")) {
         return message.reply({
@@ -12,22 +14,24 @@ module.exports = async (bot,message,args,argsF) => {
         })
     }
 
-    let comanders = ''
-    let groups = ''
-
-    for (const el of memGuild.commanderRole) {
-        comanders = comanders + ` <@&${el}>`
+    for (const role of memGuild.commanderRoles) {
+        let groups = ''
+        for (const group of role.groups) {
+            groups = groups + `<@&${group}>` + ', '
+        }
+        groups = groups.substring(0, groups.length - 2);
+        const result = `<@&${role.id}> командует: ${groups} \n`
+        commanders = commanders + result
     }
 
-    for (const el of memGuild.groupings) {
-        groups = groups + ` <@&${el}>`
+    for (const group of memGuild.groupings) {
+        const result = `<@&${group.id}> \n`
+        groupings = groupings + result
     }
-
-    if (!comanders) comanders = ' здесь пока еще нет ролей'
-    if (!groups) groups = ' здесь пока еще нет ролей'
+    
 
     return message.reply({
-        content: `Роли командующих:${comanders}` + '\r\n' + `Роли группировок:${groups}`
+        content: commanders + '\n' + groupings
     })
     
 };

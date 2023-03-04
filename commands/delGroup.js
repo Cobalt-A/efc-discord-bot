@@ -4,6 +4,7 @@ module.exports = async (bot,message,args,argsF) => {
     const {guild} = message
     const {Memory} = bot
     const memGuild = Memory.guilds.get(guild.id)
+    const group = memGuild.groupings.find((el) => el.id == args.role)
 
     if (!message.member.permissions.has("ADMIN")) {
         return message.reply({
@@ -13,14 +14,19 @@ module.exports = async (bot,message,args,argsF) => {
     }
 
     // если такой роли нет
-    if (!memGuild.groupings.find((el) => el == args.role)) {
+    if (!group) {
         return message.reply({
             content: `Роль <@&${args.role}> не является ролью группировки`,
             ephemeral: true
         })
     }
 
-    memGuild.groupings = memGuild.groupings.filter((el) => el !== args.role)
+    memGuild.groupings = memGuild.groupings.filter((el) => el.id !== args.role)
+
+    for (const obj of memGuild.groupings) {
+        obj.groups = obj.groups.filter((el) => el.id !== args.role)
+    }
+    
     Memory.save()
     return message.reply({
         content: `Теперь роль <@&${args.role}> не является ролью группировки`

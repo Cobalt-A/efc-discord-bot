@@ -1,5 +1,5 @@
 module.exports = async (bot) => {
-    console.log(bot.user.username + " ready!\nSkelet by Strelok");
+    console.log(bot.user.username + " ready!\nLet's do this pilot shit");
 
     const commandsIT = bot.application.commands;
     await commandsIT.fetch(); //Найти все команды
